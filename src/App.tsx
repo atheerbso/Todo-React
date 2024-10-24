@@ -1,35 +1,35 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import SignUp from "./components/SignUp";
 import LogIn from "./components/LogIn";
-import Home from "./Home";
+import Layout from "./Layout";
+import About from "./components/About";
+import Content from "./Content";
 
 export default function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home />,
-      // loader: rootLoader,
-    },
-    {
-      path: "/SignUp",
-      element: <SignUp />,
-    },
-    {
-      path: "/LogIn",
-      element: <LogIn />,
+      element: <Layout />,
+      children: [
+        {
+          path: "/",
+          element: <Content />,
+        },
+        {
+          path: "signup",
+          element: <SignUp />,
+        },
+        {
+          path: "login",
+          element: <LogIn />,
+        },
+        {
+          path: "about",
+          element: <About />,
+        },
+      ],
     },
   ]);
 
   return <RouterProvider router={router} />;
 }
-
-// children: [
-//   {
-//     path: "SignUp /",
-//     element: <SignUp />,
-//   },
-//   {
-//     path: "LogIn /",
-//     element: <LogIn />,
-//   },
-// ],

@@ -5,6 +5,8 @@ import { dummyData } from "./data/todos";
 // import TodoItem from "./todoitem";
 import TodoSummary from "./components/TodoSummary";
 import { Todo } from "./types/todo";
+// import Header from "./components/Header";
+// import Footer from "./components/Footer";
 
 function Content() {
   const [todos, setTodos] = useState(() => {
@@ -40,7 +42,7 @@ function Content() {
     setTodos((prevTodos) => prevTodos.filter((todo) => !todo.completed));
   }
   return (
-    <main className="h-screen ">
+    <main className="h-[100vh]">
       <div className="pt-40">
         <h1 className="font-bold text-3xl text-center p-3">Your Todos</h1>
 

@@ -1,0 +1,15 @@
+{
+  "user": [
+    {
+      "email": "string",
+      "password": "string"
+    }
+  ],
+  "todo": [
+    {
+      "id": "number",
+      "title": "string",
+      "completed": "boolean"
+    }
+  ]
+}
