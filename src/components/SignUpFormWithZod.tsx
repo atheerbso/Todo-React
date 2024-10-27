@@ -1,7 +1,7 @@
 // "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
+import { SubmitHandler, useForm } from "react-hook-form"; // library to cheack data regesrtation
+import { z } from "zod"; // library to cheack data regesrtation , but for more complex
 import http from "./HTTP/http";
 
 //here is all scheam validation to cheack all inputs data
@@ -9,6 +9,7 @@ import http from "./HTTP/http";
 const signUpSchema = z
   .object({
     email: z.string().email(),
+    name: z.string().min(2, "the fisrt litter must to be capital"),
     password: z.string().min(10, "Password must  be at least 10 charecters"),
     confirmPassword: z.string(),
   })
@@ -19,27 +20,23 @@ const signUpSchema = z
 
 type signUpSchema = z.infer<typeof signUpSchema>;
 // isSubmitting
-export default function SignUpForm() {
+export default function SignUpFormWithZod() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     // reset,
   } = useForm<signUpSchema>({
     resolver: zodResolver(signUpSchema),
   });
-  //   =====================
-  //   handle submit
-  //   const onSubmit: SubmitHandler<signUpSchema> = async (data: signUpSchema) => {
-  //     http.post("/user", data);
-  //   };
 
   const onSubmit: SubmitHandler<signUpSchema> = async (data: signUpSchema) => {
     try {
+      //to link with db
       const response = await http.post("/user", data);
       console.log("Signup successful:", response);
     } catch (error) {
-      console.error("Signup errorrrr:", error);
+      console.error("Signup error:", error);
       // Handle errors appropriately (e.g., display error messages)
     }
   };
@@ -53,10 +50,18 @@ export default function SignUpForm() {
         </h4>
       </div>
       <form
-        //===
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col items-center m-auto space-y-4"
       >
+        <input
+          {...register("name")}
+          type="text"
+          placeholder="Username"
+          className=" w-[70%] h-9 border-none  outline-none rounded-sm p-1 "
+        ></input>
+        {errors.name && (
+          <p className="text-red-500">{`${errors.name.message}`}</p>
+        )}
         <input
           {...register("email")}
           type="email"
@@ -85,7 +90,7 @@ export default function SignUpForm() {
           <p className="text-red-500">{`${errors.confirmPassword.message}`}</p>
         )}
         <button
-          //   disabled={isSubmitting}
+          disabled={isSubmitting}
           type="submit"
           className="bg-blue-700 w-[70%] h-10 rounded-sm text-white"
         >

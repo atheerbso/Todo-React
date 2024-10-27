@@ -3,13 +3,14 @@ import SignUp from "./components/SignUp";
 import LogIn from "./components/LogIn";
 import Layout from "./Layout";
 import About from "./components/About";
-import Content from "./Content";
+import Content from "./components/Content";
 
 export default function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Layout />,
+
       children: [
         {
           path: "/",
@@ -30,6 +31,9 @@ export default function App() {
       ],
     },
   ]);
-
-  return <RouterProvider router={router} />;
+  return (
+    <div>
+      <RouterProvider router={router} />
+    </div>
+  );
 }

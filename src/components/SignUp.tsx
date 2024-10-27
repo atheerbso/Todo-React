@@ -1,6 +1,6 @@
 // import SignUpForm from "./SignUpForm";
-import SignUpForm from "./SignUpFormWithZod";
+import SignUpFormWithZod from "./SignUpFormWithZod";
 
 export default function SignUp() {
-  return <SignUpForm />;
+  return <SignUpFormWithZod />;
 }

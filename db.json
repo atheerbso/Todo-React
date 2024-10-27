@@ -2,7 +2,29 @@
   "user": [
     {
       "email": "string",
-      "password": "string"
+      "password": "string",
+      "id": "5fed"
+    },
+    {
+      "id": "56ea",
+      "email": "atheerbso@gmail.com",
+      "name": "atheer",
+      "password": "1234567890",
+      "confirmPassword": "1234567890"
+    },
+    {
+      "id": "776b",
+      "email": "atheerbso@gmail.com",
+      "name": "atheer",
+      "password": "1234567890",
+      "confirmPassword": "1234567890"
+    },
+    {
+      "id": "d36b",
+      "email": "atheerbso@gmail.com",
+      "name": "atheer",
+      "password": "1234567890",
+      "confirmPassword": "1234567890"
     }
   ],
   "todo": [

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import AddTodoForm from "./components/addTodoForm";
-import TodoList from "./components/TodoList";
-import { dummyData } from "./data/todos";
+import AddTodoForm from "./addTodoForm";
+import TodoList from "./TodoList";
+import { dummyData } from "../data/todos";
 // import TodoItem from "./todoitem";
-import TodoSummary from "./components/TodoSummary";
-import { Todo } from "./types/todo";
+import TodoSummary from "./TodoSummary";
+import { Todo } from "../types/todo";
 // import Header from "./components/Header";
 // import Footer from "./components/Footer";
 
@@ -45,7 +45,6 @@ function Content() {
     <main className="h-[100vh]">
       <div className="pt-40">
         <h1 className="font-bold text-3xl text-center p-3">Your Todos</h1>
-
         <div className="max-w-lg mx-auto bg-slate-100 rounded-md p-5 space-y-6 ">
           <AddTodoForm onSubmit={addToDo} />
           <TodoList

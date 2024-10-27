@@ -4,12 +4,14 @@ import http from "./HTTP/http";
 interface AddTodoFormProbs {
   onSubmit: (title: string) => void;
 }
+
 export default function AddTodoForm({ onSubmit }: AddTodoFormProbs) {
   const [input, setInput] = useState("");
 
   function handlSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!input.trim()) return;
+    //to link with db
     const res = http.post<{ title: string }>("todo", { title: input });
     console.log(res);
     onSubmit(input);
