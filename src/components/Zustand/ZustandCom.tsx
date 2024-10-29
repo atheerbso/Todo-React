@@ -1,31 +1,5 @@
-// import { create } from "zustand";
-// import { DisplayIcon } from "../ContextAPI/DisplayIcon";
-
-// // Zustand store
-// const useStore = create((set) => ({
-//   pressedShow: false,
-//   toggleShow: () => set((state) => ({ pressedShow: !state.pressedShow })),
-// }));
-
-// export const Icon = () => {
-//   const { pressedShow, toggleShow } = useStore();
-
-//   return (
-//     <>
-//       <div className="pageLayout">
-//         {pressedShow && <DisplayIcon />}
-//         <div>
-//           <button onClick={toggleShow}>
-//             {pressedShow ? "Hide icon" : "Show icon"}
-//           </button>
-//         </div>
-//       </div>
-//     </>
-//   );
-// };
-
+import { useEffect } from "react";
 import { create } from "zustand";
-import Button from "../ContextTheme/Button";
 
 interface ThemeStore {
   darkMode: boolean;
@@ -33,10 +7,41 @@ interface ThemeStore {
 }
 
 const useStore = create<ThemeStore>((set) => ({
-  darkMode: true, // Initial dark mode state
+  //
+  darkMode: window.matchMedia("(prefers-color-scheme: dark)").matches,
   toggleTheme: () => set((state) => ({ darkMode: !state.darkMode })),
 }));
 
 export const ZustandCom = () => {
-  return <Button></Button>;
+  const { darkMode, toggleTheme } = useStore();
+
+  useEffect(() => {
+    document.documentElement.setAttribute(
+      "data-theme",
+      darkMode ? "dark" : "light"
+    );
+  }, [darkMode]);
+
+  return (
+    <div>
+      <Button darkMode={darkMode} toggleTheme={toggleTheme} />
+    </div>
+  );
+};
+
+const Button = ({
+  darkMode,
+  toggleTheme,
+}: {
+  darkMode: boolean;
+  toggleTheme: () => void;
+}) => {
+  return (
+    <button
+      onClick={toggleTheme}
+      className={`w-14 h-14 ml-4 ${darkMode ? "dark-mode" : ""}`}
+    >
+      <img src="/public/brightness-and-contrast.png" alt="Toggle Theme" />
+    </button>
+  );
 };
