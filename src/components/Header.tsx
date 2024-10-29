@@ -6,9 +6,9 @@ import { Link } from "react-router-dom";
 // import { Icon } from "./Zustand/ShowIconZus";
 
 //# for theme button
-// import Button from "./ContextTheme/Button";
-// import "../styles.css";
-// import { ThemeProvider } from "./ContextTheme/ThemeProvider";
+import Button from "./ContextTheme/Button";
+import "../styles.css";
+import { ThemeProvider } from "./ContextTheme/ThemeProvider";
 import { ZustandCom } from "./Zustand/ZustandCom";
 
 // export const LoginContext = createContext({
@@ -23,10 +23,10 @@ export default function Header() {
         {/* <IconProvider> */}
         {/* <Icon></Icon> */}
         {/* </IconProvider> */}
-        {/* <ThemeProvider>
+        <ThemeProvider>
           <Button />
-        </ThemeProvider> */}
-        <ZustandCom />
+        </ThemeProvider>
+        {/* <ZustandCom /> */}
       </div>
 
       <div className="">
