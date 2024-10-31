@@ -33,7 +33,7 @@ export default function SignUpFormWithZod() {
   const onSubmit: SubmitHandler<signUpSchema> = async (data: signUpSchema) => {
     try {
       //to link with db
-      const response = await http.post("/user", data);
+      const response = await http.post("user", data);
       console.log("Signup successful:", response);
     } catch (error) {
       console.error("Signup error:", error);

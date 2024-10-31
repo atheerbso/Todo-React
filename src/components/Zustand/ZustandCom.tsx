@@ -3,13 +3,12 @@ import { create } from "zustand";
 
 interface ThemeStore {
   darkMode: boolean;
+
   toggleTheme: () => void;
 }
 
 const useStore = create<ThemeStore>((set) => ({
-  darkMode:
-    window.matchMedia("(prefers-color-scheme: light)").matches ||
-    process.env.REACT_APP_DEFAULT_THEME === "light",
+  darkMode: window.matchMedia("(prefers-color-scheme: light)").matches,
   toggleTheme: () => set((state) => ({ darkMode: !state.darkMode })),
 }));
 

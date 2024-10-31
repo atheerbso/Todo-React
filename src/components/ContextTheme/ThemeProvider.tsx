@@ -19,15 +19,8 @@ export const useTheme = () => {
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [darkMode, setDarkMode] = useState(
-    window.matchMedia("(prefer-color-scheme:light)").matches ||
-      process.env.REACT_APP_DEFAULT_THEME === "light"
+    window.matchMedia("(prefer-color-scheme:light)").matches
   ); //here useState to manage the darkMode state
-
-  // export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  //   const [darkMode, setDarkMode] = useState(
-  //     window.matchMedia("(prefers-color-scheme: dark)").matches ||
-  //       process.env.REACT_APP_DEFAULT_THEME === "dark"
-  //   );
 
   const toggleTheme = () => {
     //toggles the darkMode state using functional state update

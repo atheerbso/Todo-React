@@ -4,8 +4,25 @@ import LogIn from "./components/LogIn";
 import Layout from "./Layout";
 import About from "./components/About";
 import Content from "./components/Content";
+import { ThemeProvider } from "./components/ContextTheme/ThemeProvider";
+// import { useState } from "react";
+// import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// import ReactQuery from "./ReactQuery/ReactQuery";
+
+// import AuthProvider from "./AuthProvider";
+
+// const queryClient = new QueryClient({
+//   defaultOptions: {
+//     queries: {
+//       refetchOnWindowFocus: false,
+//     },
+//   },
+// });
 
 export default function App() {
+  //this var for react query
+  // const [showDemo, setShowDemo] = useState(true);
+
   const router = createBrowserRouter([
     {
       path: "/",
@@ -31,5 +48,19 @@ export default function App() {
       ],
     },
   ]);
-  return <RouterProvider router={router} />;
+  return (
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }
+
+//  <AuthProvider>
+// <QueryClientProvider client={queryClient}>
+// <ThemeProvider>
+//   <RouterProvider router={router} />
+//   <button onClick={() => setShowDemo(!showDemo)}>Toggle Demo</button>
+//   {showDemo && <ReactQuery />}
+// </ThemeProvider>
+// </QueryClientProvider>
+// </AuthProvider>

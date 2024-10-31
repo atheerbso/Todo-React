@@ -2,13 +2,22 @@ import { useEffect, useState } from "react";
 import AddTodoForm from "./addTodoForm";
 import TodoList from "./TodoList";
 import { dummyData } from "../data/todos";
-// import TodoItem from "./todoitem";
 import TodoSummary from "./TodoSummary";
 import { Todo } from "../types/todo";
-// import Header from "./components/Header";
-// import Footer from "./components/Footer";
+import { useAuth } from "../AuthProvider";
+import { useQuery } from "@tanstack/react-query";
+import http from "./HTTP/http";
 
 function Content() {
+  //==
+  const auth = useAuth();
+  const userId = auth?.User?.id;
+  const query = useQuery({
+    queryKey: ["todolist"],
+    queryFn: () => http.get("todo").then((res) => res.data),
+  });
+
+  //==
   const [todos, setTodos] = useState(() => {
     const savedTodos: Todo[] = JSON.parse(
       localStorage.getItem("todos") || "[]"
@@ -30,6 +39,7 @@ function Content() {
         id: prevTodos.length + 1,
         title,
         completed: false,
+        userId: "111",
       },
       ...prevTodos,
     ]);

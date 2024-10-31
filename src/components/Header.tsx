@@ -1,14 +1,9 @@
 import { Link } from "react-router-dom";
-//for context API
-// import { createContext, useState } from "react";
-// import { IconProvider } from "./ContextAPI/IconContext";
-// import { Icon } from "./ContextAPI/Icon";
-// import { Icon } from "./Zustand/ShowIconZus";
 
-//# for theme button
+//# for Contexttheme button
 // import Button from "./ContextTheme/Button";
 import "../styles.css";
-// import { ThemeProvider } from "./ContextTheme/ThemeProvider";
+//for zustand
 import { ZustandCom } from "./Zustand/ZustandCom";
 
 // export const LoginContext = createContext({
@@ -16,16 +11,10 @@ import { ZustandCom } from "./Zustand/ZustandCom";
 //   setLoggedIn: (pressedShow: false) => {},
 // });
 export default function Header() {
-  //   const [pressedShow, setIcon] = useState<boolean>(false);
   return (
     <div className="bg-gray-200 h-20 w-full flex  p-1  gap-5 text-center   items-center text-2xl font-light">
       <div className="flex flex-grow">
-        {/* <IconProvider> */}
-        {/* <Icon></Icon> */}
-        {/* </IconProvider> */}
-        {/* <ThemeProvider>
-          <Button />
-        </ThemeProvider> */}
+        {/* <Button /> */}
         <ZustandCom />
       </div>
 
