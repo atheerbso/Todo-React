@@ -6,7 +6,7 @@ import About from "./components/About";
 import Content from "./components/Content";
 import { ThemeProvider } from "./components/ContextTheme/ThemeProvider";
 // import { useState } from "react";
-// import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import ReactQuery from "./ReactQuery/ReactQuery";
 
 // import AuthProvider from "./AuthProvider";
@@ -49,9 +49,11 @@ export default function App() {
     },
   ]);
   return (
-    <ThemeProvider>
-      <RouterProvider router={router} />
-    </ThemeProvider>
+    <QueryClientProvider client={new QueryClient()}>
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 
