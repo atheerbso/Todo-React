@@ -14,13 +14,13 @@ export default function AddTodoForm({ onSubmit }: AddTodoFormProps) {
     mutationFn: (body: { title: string; userId: string }) =>
       http.post<{ title: string; userId: string }>("todo", body),
     onSuccess: (data) => {
-      // Process the response data here
+    
       onSubmit(input, userId);
       setInput("");
     },
     onError: (error) => {
       console.error("Error adding todo:", error);
-      // Handle error appropriately (e.g., display an error message to the user)
+ 
     },
   });
 
