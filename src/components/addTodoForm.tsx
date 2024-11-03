@@ -1,35 +1,41 @@
 import { useState } from "react";
 import http from "./HTTP/http";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../AuthProvider";
 
-interface AddTodoFormProps {
-  onSubmit: (title: string, userId: string) => void;
-}
+// interface AddTodoFormProps {
+//   onSubmit: (title: string, userId: string) => void;
+// }
 
-export default function AddTodoForm({ onSubmit }: AddTodoFormProps) {
+export default function AddTodoForm() {
   const [input, setInput] = useState("");
-  const [userId, setUserId] = useState<string | null>(null);
+  const auth = useAuth();
+  const userId = auth?.User?.id;
 
-  const addTodoMutation = useMutation({
+  const queryClient = useQueryClient();
+
+  const addToDoFormMutation = useMutation({
     mutationFn: (body: { title: string; userId: string }) =>
-      http.post<{ title: string; userId: string }>("todo", body),
+      http
+        .post<{ title: string; userId: string }>("todo", body)
+        .then((res) => res.data),
     onSuccess: (data) => {
-    
-      onSubmit(input, userId);
       setInput("");
     },
     onError: (error) => {
       console.error("Error adding todo:", error);
- 
+      // Display an error message to the user or handle the error appropriately
+      alert("Failed to add todo. Please try again.");
     },
   });
-
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!input.trim() || !userId) return;
-    addTodoMutation.mutateAsync({ title: input, userId });
+    addToDoFormMutation.mutateAsync({ title: input, userId });
+    // onSuccess: () => {
+    //   setInput("");
+    // };
   }
-
   return (
     <form className="flex" onSubmit={handleSubmit}>
       <input
@@ -38,13 +44,19 @@ export default function AddTodoForm({ onSubmit }: AddTodoFormProps) {
         placeholder="What needs to be done ?"
         className="rounded-s-md grow border border-gray-400 p-2"
       />
+
       <button
         type="submit"
         className="w-16 rounded-e-md bg-slate-900 text-white hover:bg-slate-900"
-        disabled={addTodoMutation.isLoading} // Disable button while adding
+        disabled={addToDoFormMutation.isLoading}
       >
-        {addTodoMutation.isLoading ? "Adding..." : "Add"}
+        {addToDoFormMutation.isLoading ? "Adding..." : "Add"}
       </button>
+      {addToDoFormMutation.isError && (
+        <p className="text-red-500">
+          Error adding todo: {addToDoFormMutation.error?.message}
+        </p>
+      )}
     </form>
   );
 }
