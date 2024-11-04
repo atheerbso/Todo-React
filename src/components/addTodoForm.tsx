@@ -12,7 +12,7 @@ export default function AddTodoForm() {
 
   const addToDoFormMutation = useMutation({
     // useMutation is func helps manage asynchronous data updates (mutations) on server.
-    //between curly bracktes i added  mutation to performed and  handle  success and failure scenarios.
+    //between curly bracktes i added  mutation to performed and how to handle its success and failure scenarios.
     mutationFn: (body: { title: string; userId: string }) =>
       http
         .post<{ title: string; userId: string }>("todo", body)
@@ -31,7 +31,6 @@ export default function AddTodoForm() {
     if (!input.trim() || !userId) return;
     addToDoFormMutation.mutateAsync({ title: input, userId });
   }
-
   return (
     <form className="flex" onSubmit={handleSubmit}>
       <input
