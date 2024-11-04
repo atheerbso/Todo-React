@@ -1,18 +1,16 @@
-// import { useState } from "react";
 import AddTodoForm from "./addTodoForm";
 import TodoList from "./TodoList";
-// import { dummyData } from "../data/todos";
 import TodoSummary from "./TodoSummary";
 import { Todo } from "../types/todo";
 import { useAuth } from "../AuthProvider";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import http from "./HTTP/http";
 import { User } from "lucide-react";
 
 function Content() {
-  //==
   const auth = useAuth();
   const userId = auth?.User?.id;
+  const queryClient = useQueryClient();
 
   const {
     data: todos = [],
@@ -25,55 +23,70 @@ function Content() {
     },
     enabled: !!userId,
   });
-  //==
-  //   const [todos, setTodos] = useState(() => {
-  //     const savedTodos: Todo[] = JSON.parse(
-  //       localStorage.getItem("todos") || "[]"
-  //     );
-  //     return savedTodos.length > 0 ? savedTodos : dummyData;
-  //   });
 
-  //   useEffect(() => {
-  //     localStorage.setItem("todos", JSON.stringify(todos));
-  //   }, [todos]);
-  //   function setTodoCompleted(id: number, completed: boolean) {
-  //     setTodos((prevTodos) =>
-  //       prevTodos.map((todo) => (todo.id === id ? { ...todo, completed } : todo))
-  //     );
-  //   }
-  // function addToDo(title: string) {
-  //   setTodos((prevTodos) => [
-  //     {
-  //       id: prevTodos.length + 1,
-  //       title,
-  //       completed: false,
-  //       userId: "111",
-  //     },
-  //     ...prevTodos,
-  //   ]);
-  // }
-  //   function deleteTodo(id: number) {
-  //     setTodos((prevTodos) => prevTodos.filter((Todo) => Todo.id !== id));
-  //   }
+  const deleteTodo = useMutation({
+    mutationFn: (id: number) => http.delete(`todo/${id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["todolist"],
+      });
+    },
+  });
+  const deleteCompleted = useMutation({
+    mutationFn: () => http.delete(`todo/completed?userId=${userId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["todolist"],
+      });
+    },
+  });
+  const toggleCompleted = useMutation({
+    mutationFn: (todo: Todo) =>
+      http.put(`todo/${todo.id}`, { ...todo, completed: !todo.completed }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["todolist"],
+      });
+    },
+  });
 
-  //   function deleteAllCompletedTodos() {
-  //     setTodos((prevTodos) => prevTodos.filter((todo) => !todo.completed));
-  //   }
+  if (isLoading) return <p>Loading...</p>;
+  if (isError) return <p>Failed to get todos</p>;
+  console.log(todos);
+
+  const handleDelete = (id: number) => {
+    deleteTodo.mutate(id);
+  };
+
+  const handleDeleteAllCompleted = () => {
+    deleteCompleted.mutate();
+  };
+
+  const handleCompletedChange = (id: number) => {
+    const todoToUpdate = todos.find((todo) => todo.id === id);
+    if (todoToUpdate) {
+      toggleCompleted.mutate({ ...todoToUpdate });
+    }
+  };
   return (
     <main className="h-[100vh]">
       <div className="pt-40">
         <h1 className="font-bold text-3xl text-center p-3">
-          Your Todos ,{/* {auth?.userId?.id} */}
+          Your Todos ,{auth?.User?.name}
         </h1>
         <div className="max-w-lg mx-auto bg-slate-100 rounded-md p-5 space-y-6 ">
+          <AddTodoForm />
           <TodoList
-            todos={todos}
-            oncompletedChange={() => {}}
-            onDelete={() => {}}
+            todos={todos || []}
+            oncompletedChange={handleCompletedChange}
+            onDelete={handleDelete}
           />
         </div>
-        <AddTodoForm />
-        <TodoSummary todos={todos} deleteAllCompleted={() => {}} />
+
+        <TodoSummary
+          todos={todos || []}
+          deleteAllCompleted={handleDeleteAllCompleted}
+        />
       </div>
     </main>
   );
