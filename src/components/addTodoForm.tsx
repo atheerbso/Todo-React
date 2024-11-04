@@ -3,10 +3,6 @@ import http from "./HTTP/http";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../AuthProvider";
 
-// interface AddTodoFormProps {
-//   onSubmit: (title: string, userId: string) => void;
-// }
-
 export default function AddTodoForm() {
   const [input, setInput] = useState("");
   const auth = useAuth();
@@ -15,27 +11,27 @@ export default function AddTodoForm() {
   const queryClient = useQueryClient();
 
   const addToDoFormMutation = useMutation({
+    // useMutation is func helps manage asynchronous data updates (mutations) on server.
+    //between curly bracktes i added  mutation to performed and  handle  success and failure scenarios.
     mutationFn: (body: { title: string; userId: string }) =>
       http
         .post<{ title: string; userId: string }>("todo", body)
         .then((res) => res.data),
-    onSuccess: (data) => {
-      setInput("");
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todolist"] });
     },
     onError: (error) => {
       console.error("Error adding todo:", error);
-      // Display an error message to the user or handle the error appropriately
       alert("Failed to add todo. Please try again.");
     },
-  });
+  }); //end of addToDoFormMutation
+
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!input.trim() || !userId) return;
     addToDoFormMutation.mutateAsync({ title: input, userId });
-    // onSuccess: () => {
-    //   setInput("");
-    // };
   }
+
   return (
     <form className="flex" onSubmit={handleSubmit}>
       <input
@@ -48,9 +44,9 @@ export default function AddTodoForm() {
       <button
         type="submit"
         className="w-16 rounded-e-md bg-slate-900 text-white hover:bg-slate-900"
-        disabled={addToDoFormMutation.isLoading}
+        disabled={addToDoFormMutation.isPending}
       >
-        {addToDoFormMutation.isLoading ? "Adding..." : "Add"}
+        {addToDoFormMutation.isPending ? "Adding..." : "Add"}
       </button>
       {addToDoFormMutation.isError && (
         <p className="text-red-500">
