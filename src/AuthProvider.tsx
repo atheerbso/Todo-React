@@ -4,7 +4,7 @@ import { user } from "./types/todo";
 export type AuthContextType = {
   User: user | null;
   userInfo: string;
-  loginAction: (data: { name: string; password: string }) => void;
+  loginAction: (data: user) => void;
 };
 
 // sets the default value of the context to undefined initially.
@@ -18,8 +18,9 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       : ""
   );
 
-  const loginAction = async (data: user) => {
+  const loginAction = (data: user) => {
     //fun to takes user data as an object then  performs the login action (sending a request to the server)
+    console.log(data, "data");
     setUser(data);
     setUserInfo(data.name);
   };
