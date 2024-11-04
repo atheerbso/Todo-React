@@ -18,12 +18,7 @@ type logInSchema = z.infer<typeof logInSchema>;
 export default function LogInForm() {
   const auth = useAuth();
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    // formState: {  isSubmitting },
-    // reset,
-  } = useForm<logInSchema>({
+  const { register, handleSubmit } = useForm<logInSchema>({
     resolver: zodResolver(logInSchema),
   });
 
@@ -43,12 +38,13 @@ export default function LogInForm() {
       );
 
       if (foundUser) {
-        await auth?.loginAction(foundUser);
+        console.log("foundUser", foundUser);
+        auth?.loginAction(foundUser);
         navigate("/");
       }
     } catch (error) {
       console.error("Login failed:", error);
-      alert("Invalid username or password"); // Display alert here
+      alert("Sorry ! Name or Password is Error , please try again !"); // Display alert here
     }
   };
 
