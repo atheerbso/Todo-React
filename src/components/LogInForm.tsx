@@ -1,17 +1,18 @@
 // "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import http from "./HTTP/http";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthProvider";
+import { useQuery } from "@tanstack/react-query";
 
 //here is all scheam validation to cheack all inputs data
 
 const logInSchema = z.object({
   name: z.string(),
   password: z.string().min(10, "Password must  be at least 10 charecters"),
-});
+}); //00
 
 type logInSchema = z.infer<typeof logInSchema>;
 
@@ -20,34 +21,34 @@ export default function LogInForm() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<logInSchema>({
     resolver: zodResolver(logInSchema),
+  }); //00
+
+  const { data: users } = useQuery<logInSchema[]>({
+    queryKey: ["loginKey"],
+    queryFn: async () => {
+      const response = await http.get<logInSchema[]>("/user");
+      return response.data;
+    },
   });
 
-  const onSubmit = async (data: logInSchema) => {
+  const onSubmit: SubmitHandler<logInSchema> = async (item) => {
     try {
-      const response = await http.get<
-        {
-          name: string;
-          password: string;
-          id: string;
-          userId: string | null;
-        }[]
-      >("/user");
-      const users = response.data;
-      const foundUser = users.find(
-        (item) => item.name === data.name && item.password === data.password
+      const foundUser = users?.find(
+        (user) => user.name === item.name && user.password === item.password
       );
 
       if (foundUser) {
-        console.log("foundUser", foundUser);
+        console.log("Found user:", foundUser);
         auth?.loginAction(foundUser);
         navigate("/");
+      } else {
+        alert("Sorry! Name or password is incorrect. Please try again.");
       }
     } catch (error) {
       console.error("Login failed:", error);
-      alert("Sorry ! Name or Password is Error , please try again !"); // Display alert here
+      alert("An error occurred during login. Please try again later.");
     }
   };
-
   return (
     <div className="bg-gray-200 w-[30%] h-[60%]  p-4 border rounded-lg   m-auto  justify-center items-center ">
       <div className=" m-auto text-center p-6 ">
@@ -73,7 +74,6 @@ export default function LogInForm() {
         ></input>
 
         <button
-          //   disabled={isSubmitting}
           type="submit"
           className="bg-blue-700 w-[70%] h-10 rounded-sm text-white"
         >
