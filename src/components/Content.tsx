@@ -5,7 +5,6 @@ import { Todo } from "../types/todo";
 import { useAuth } from "../AuthProvider";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import http from "./HTTP/http";
-import { User } from "lucide-react";
 
 function Content() {
   const auth = useAuth();
@@ -19,7 +18,7 @@ function Content() {
   } = useQuery<Todo[]>({
     queryKey: ["todolist"],
     queryFn: () => {
-      return http.get<Todo[]>("todo?User=" + User).then((res) => res.data);
+      return http.get<Todo[]>("todo?userId=" + userId).then((res) => res.data);
     },
     enabled: !!userId,
   });
@@ -42,7 +41,7 @@ function Content() {
   });
   const toggleCompleted = useMutation({
     mutationFn: (todo: Todo) =>
-      http.put(`todo/${todo.id}`, { ...todo, completed: !todo.completed }),
+      http.put(`todo/${todo.id}`, { ...todo, completed: !todo.completed }), //===
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["todolist"],
@@ -90,6 +89,6 @@ function Content() {
       </div>
     </main>
   );
-}
+} //end content compunents .
 
 export default Content;
