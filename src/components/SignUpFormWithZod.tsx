@@ -3,6 +3,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { SubmitHandler, useForm } from "react-hook-form"; // library to cheack data regesrtation
 import { z } from "zod"; // library to cheack data regesrtation , but for more complex
 import http from "./HTTP/http";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 
 //here is all scheam validation to cheack all inputs data
 
@@ -21,24 +23,28 @@ const signUpSchema = z
 type signUpSchema = z.infer<typeof signUpSchema>;
 // isSubmitting
 export default function SignUpFormWithZod() {
+  const navigate = useNavigate();
+  const signUpWithMutation = useMutation({
+    mutationFn: (body: signUpSchema) =>
+      http.post<signUpSchema>("user", body).then((res) => res.data),
+    onSuccess: () => {
+      navigate("/");
+    },
+    onError: (error) => {
+      console.error("Signup error:", error);
+    },
+  });
+
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     // reset,
   } = useForm<signUpSchema>({
     resolver: zodResolver(signUpSchema),
   });
-
-  const onSubmit: SubmitHandler<signUpSchema> = async (data: signUpSchema) => {
-    try {
-      //to link with db
-      const response = await http.post("user", data);
-      console.log("Signup successful:", response);
-    } catch (error) {
-      console.error("Signup error:", error);
-      // Handle errors appropriately (e.g., display error messages)
-    }
+  const onSubmit: SubmitHandler<signUpSchema> = (data) => {
+    signUpWithMutation.mutate(data);
   };
 
   return (
@@ -90,7 +96,7 @@ export default function SignUpFormWithZod() {
           <p className="text-red-500">{`${errors.confirmPassword.message}`}</p>
         )}
         <button
-          disabled={isSubmitting}
+          //   disabled={isSubmitting}
           type="submit"
           className="bg-blue-700 w-[70%] h-10 rounded-sm text-white"
         >
@@ -99,4 +105,8 @@ export default function SignUpFormWithZod() {
       </form>
     </div>
   );
-}
+} //end of SignUpFormWithZod
+
+// function signUpWithMutation() {
+//   throw new Error("Function not implemented.");
+// }
